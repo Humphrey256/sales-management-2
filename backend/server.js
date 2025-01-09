@@ -23,14 +23,6 @@ dbConnect();
 // API Routes
 app.use('/api/sales', salesRoutes);
 
-// Serve React App's static files from the 'build' folder
-app.use(express.static(path.join(__dirname, 'frontend/pubic')));
-
-// Catch-all route to send index.html for all non-API requests (to allow React Router to handle routing)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend/public', 'index.html'));
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
