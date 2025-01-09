@@ -1,0 +1,65 @@
+/* src/index.css */
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+  }
+  
+  #root {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  input,
+  button {
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"], input[type="number"] {
+    width: 100%;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2d2d2d;
+  }
+  
+  /* Media Query for Tablets (Min Width: 600px) */
+  @media (min-width: 600px) {
+    h1 {
+      font-size: 32px;
+    }
+  
+    #root {
+      width: 80%;
+    }
+  }
+  
+  /* Media Query for Desktop (Min Width: 1024px) */
+  @media (min-width: 1024px) {
+    #root {
+      width: 70%;
+    }
+  
+    h1 {
+      font-size: 36px;
+    }
+    
+  }
+  
