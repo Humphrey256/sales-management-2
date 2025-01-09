@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';  // Import styles
 
 const SalesListPage = () => {
   const [sales, setSales] = useState([]);
@@ -34,10 +36,10 @@ const SalesListPage = () => {
     try {
       await axios.delete(`http://localhost:5000/api/sales/${id}`);
       setSales(sales.filter((sale) => sale._id !== id)); // Update state after deleting
-      alert('Sale deleted successfully!');
+      toast.success('Sale deleted successfully!');  // Show success toast
     } catch (error) {
       console.error('Error deleting sale:', error);
-      alert('Failed to delete sale.');
+      toast.error('Failed to delete sale.');  // Show error toast
     }
   };
 
@@ -50,7 +52,7 @@ const SalesListPage = () => {
       <div style={styles.header}>
         <h1 style={styles.title}>Sales Management System</h1>
       </div>
-  
+
       <div style={styles.content}>
         <h2 style={styles.listTitle}>Sales List</h2>
         <p style={styles.date}>{currentDate}</p>
@@ -87,9 +89,20 @@ const SalesListPage = () => {
           </table>
         </div>
       </div>
+
+      {/* ToastContainer for rendering toast notifications */}
+      <ToastContainer 
+        position="top-right" 
+        autoClose={5000} 
+        hideProgressBar={false} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+      />
     </div>
   );
-  
 };
 
 const styles = {
@@ -175,25 +188,5 @@ const styles = {
     textAlign: 'center',
   },
 };
-
-// Responsive media query styles
-const responsiveStyleSheet = `
-  @media (max-width: 768px) {
-    th, td {
-      padding: 5px;           /* Reduce padding for smaller screens */
-      font-size: 14px;
-    }
-    button {
-      width: 60px;            /* Smaller button width */
-      font-size: 12px;
-    }
-  }
-`;
-
-// Adding the responsive styles dynamically to the page
-const styleElement = document.createElement('style');
-styleElement.innerHTML = responsiveStyleSheet;
-document.head.appendChild(styleElement);
-
 
 export default SalesListPage;

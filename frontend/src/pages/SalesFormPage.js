@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SalesFormPage = () => {
   const [product, setProduct] = useState('');
@@ -23,6 +25,7 @@ const SalesFormPage = () => {
           setSellingPrice(sellingPrice);
         } catch (error) {
           console.error('Error fetching sale:', error);
+          toast.error("Error fetching sale!");
         }
       };
 
@@ -41,7 +44,7 @@ const SalesFormPage = () => {
           costPrice,
           sellingPrice,
         });
-        alert('Sale updated successfully!');
+        toast.success("Sale updated successfully!");
       } else {
         // Add new sale
         await axios.post('http://localhost:5000/api/sales', {
@@ -50,62 +53,75 @@ const SalesFormPage = () => {
           costPrice,
           sellingPrice,
         });
-        alert('Sale added successfully!');
+        toast.success("Sale added successfully!");
       }
       navigate('/SalesListPage'); // Redirect to sales list page
     } catch (error) {
       console.error('Error saving sale:', error);
-      alert('Failed to save sale.');
+      toast.error("Failed to save sale.");
     }
   };
 
   return (
     <div style={styles.container}>
+      {/* Toast Container for showing toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       <div style={styles.header}>
         <h1 style={styles.title}>Sales Management System</h1>
       </div>
 
-      <div >
+      <div>
         <h2 style={styles.formTitle}>{id ? 'Edit Sale' : 'Add New Sale'}</h2>
         <div style={styles.content}>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <label style={styles.label}>Product</label>
-          <input
-            type="text"
-            value={product}
-            onChange={(e) => setProduct(e.target.value)}
-            required
-            style={styles.input}
-          />
-          <label style={styles.label}>Quantity</label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            required
-            style={styles.input}
-          />
-          <label style={styles.label}>Cost Price</label>
-          <input
-            type="number"
-            value={costPrice}
-            onChange={(e) => setCostPrice(Number(e.target.value))}
-            required
-            style={styles.input}
-          />
-          <label style={styles.label}>Selling Price</label>
-          <input
-            type="number"
-            value={sellingPrice}
-            onChange={(e) => setSellingPrice(Number(e.target.value))}
-            required
-            style={styles.input}
-          />
-          <button type="submit" style={styles.button}>
-            {id ? 'Update Sale' : 'Add Sale'}
-          </button>
-        </form>
-      </div>
+          <form onSubmit={handleSubmit} style={styles.form}>
+            <label style={styles.label}>Product</label>
+            <input
+              type="text"
+              value={product}
+              onChange={(e) => setProduct(e.target.value)}
+              required
+              style={styles.input}
+            />
+            <label style={styles.label}>Quantity</label>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              required
+              style={styles.input}
+            />
+            <label style={styles.label}>Cost Price</label>
+            <input
+              type="number"
+              value={costPrice}
+              onChange={(e) => setCostPrice(Number(e.target.value))}
+              required
+              style={styles.input}
+            />
+            <label style={styles.label}>Selling Price</label>
+            <input
+              type="number"
+              value={sellingPrice}
+              onChange={(e) => setSellingPrice(Number(e.target.value))}
+              required
+              style={styles.input}
+            />
+            <button type="submit" style={styles.button}>
+              {id ? 'Update Sale' : 'Add Sale'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -167,33 +183,6 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
   },
-  updateButton: {
-    width: '150px',               // Default width for larger screens
-    padding: '10px 15px',
-    backgroundColor: 'green',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
 };
-
-// Responsive media query styles
-const responsiveStyleSheet = `
-  @media (max-width: 768px) {
-    button {
-      width: 100%;                /* Full width on small screens */
-      padding: 10px;              /* Adjust padding */
-      font-size: 14px;            /* Smaller font size */
-    }
-  }
-`;
-
-// Adding the responsive styles dynamically to the page
-const styleElement = document.createElement('style');
-styleElement.innerHTML = responsiveStyleSheet;
-document.head.appendChild(styleElement);
 
 export default SalesFormPage;

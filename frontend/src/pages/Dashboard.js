@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
   const [sales, setSales] = useState([]);
@@ -19,8 +21,10 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales');
       setSales(response.data);
+      toast.success("Sales data fetched successfully!");
     } catch (error) {
       console.error('Error fetching sales:', error);
+      toast.error("Error fetching sales!");
     }
   };
 
@@ -28,8 +32,10 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales/profit');
       setTotalProfit(response.data.totalProfit);
+      toast.success("Total profit fetched successfully!");
     } catch (error) {
       console.error('Error fetching total profit:', error);
+      toast.error("Error fetching total profit!");
     }
   };
 
@@ -37,8 +43,10 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales/profit/daily');
       setDailyProfit(response.data.dailyProfit);
+      toast.success("Daily profit fetched successfully!");
     } catch (error) {
       console.error('Error fetching daily profit:', error);
+      toast.error("Error fetching daily profit!");
     }
   };
 
@@ -46,8 +54,10 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales/profit/monthly');
       setMonthlyProfit(response.data.monthlyProfit);
+      toast.success("Monthly profit fetched successfully!");
     } catch (error) {
       console.error('Error fetching monthly profit:', error);
+      toast.error("Error fetching monthly profit!");
     }
   };
 
@@ -57,6 +67,19 @@ const Dashboard = () => {
 
   return (
     <div>
+      {/* Toast Container for showing toast notifications */}
+      <ToastContainer 
+        position="top-right" 
+        autoClose={5000} 
+        hideProgressBar={false} 
+        newestOnTop={true} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+      />
+      
       <div style={styles.header}>
         <h1 style={styles.title}>Sales Management System</h1>
       </div>
