@@ -123,7 +123,7 @@ const styles = {
   },
   title: {
     margin: 0,
-    fontSize: '30px',
+    fontSize: '40px',
     color: 'blue',
     fontWeight: 'bold',
   },
