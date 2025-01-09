@@ -106,6 +106,11 @@ const Dashboard = () => {
         <Link to="/SalesFormPage" style={styles.addButton}>
           Add New Sales
         </Link>
+
+        {/* Link to Sales List Page */}
+        <Link to="/SalesListPage" style={styles.salesListButton}>
+          View Sales List
+        </Link>
       </div>
     </div>
   );
@@ -156,11 +161,23 @@ const styles = {
   addButton: {
     display: 'inline-block',
     padding: '10px 20px',
-    backgroundColor: 'yellow',
+    backgroundColor: 'blue',
     color: 'white',
     textDecoration: 'none',
     borderRadius: '4px',
     fontWeight: 'bold',
+    marginTop: '10px',
+  },
+  salesListButton: {
+    display: 'inline-block',
+    padding: '10px 20px',
+    backgroundColor: 'blue',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '4px',
+    fontWeight: 'bold',
+    marginTop: '10px',
+    marginLeft: '10px',
   },
 };
 

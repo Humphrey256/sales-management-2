@@ -175,8 +175,8 @@ const styles = {
   },
   button: {
     padding: '10px 20px',
-    backgroundColor: 'yellow',
-    color: 'black',
+    backgroundColor: 'blue',
+    color: 'white',
     fontSize: '16px',
     fontWeight: 'bold',
     border: 'none',
