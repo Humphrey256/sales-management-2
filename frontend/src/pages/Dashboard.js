@@ -187,6 +187,7 @@ const styles = {
     borderRadius: '4px',
     fontWeight: 'bold',
     marginTop: '10px',
+    marginLeft: '10px',
   },
   salesListButton: {
     display: 'inline-block',
@@ -229,7 +230,7 @@ const styles = {
       padding: '8px',
     },
     table: {
-      fontSize: '12px', // Smaller font for mobile
+      fontSize: '10px', // Smaller font for mobile
     },
     tableCell: {
       padding: '6px',

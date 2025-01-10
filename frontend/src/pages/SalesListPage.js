@@ -141,7 +141,7 @@ const styles = {
   },
   title: {
     margin: 0,
-    fontSize: '40px',
+    fontSize: '35px',
     color: 'blue',
     fontWeight: 'bold',
   },
@@ -213,6 +213,65 @@ const styles = {
     marginLeft: '5px',
     cursor: 'pointer',
     textAlign: 'center',
+  },
+  // Media Queries for responsiveness
+  '@media (max-width: 768px)': {
+    title: {
+      fontSize: '20px', // Reduce the font size on smaller screens
+    },
+    listTitle: {
+      fontSize: '22px', // Reduce the list title font size
+    },
+    date: {
+      fontSize: '14px', // Reduce date font size for small screens
+    },
+    dateHeader: {
+      fontSize: '18px', // Reduce date header font size
+    },
+    table: {
+      fontSize: '14px', // Reduce table font size
+    },
+    th: {
+      padding: '8px', // Reduce padding for smaller screens
+    },
+    td: {
+      padding: '8px', // Reduce padding for smaller screens
+    },
+    editButton: {
+      padding: '4px 8px', // Smaller button padding
+    },
+    deleteButton: {
+      padding: '4px 8px', // Smaller button padding
+    },
+  },
+  '@media (max-width: 480px)': {
+    title: {
+      fontSize: '20px', // Further reduce the font size for mobile screens
+    },
+    listTitle: {
+      fontSize: '20px', // Further reduce list title font size
+    },
+    date: {
+      fontSize: '12px', // Further reduce date font size
+    },
+    dateHeader: {
+      fontSize: '16px', // Further reduce date header font size
+    },
+    table: {
+      fontSize: '12px', // Further reduce table font size
+    },
+    th: {
+      padding: '6px', // Further reduce padding for mobile screens
+    },
+    td: {
+      padding: '6px', // Further reduce padding for mobile screens
+    },
+    editButton: {
+      padding: '4px 6px', // Even smaller button padding
+    },
+    deleteButton: {
+      padding: '4px 6px', // Even smaller button padding
+    },
   },
 };
 
