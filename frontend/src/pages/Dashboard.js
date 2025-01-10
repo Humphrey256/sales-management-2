@@ -85,28 +85,30 @@ const Dashboard = () => {
         <div style={styles.container}>
           <div style={styles.salesList}>
             <h3>Sales List</h3>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Unit Profit</th>
-                  <th>Total Profit</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sales.map((sale) => (
-                  <tr key={sale._id} style={styles.tableRow}>
-                    <td style={styles.tableCell}>{sale.product}</td>
-                    <td style={styles.tableCell}>{sale.quantity}</td>
-                    <td style={styles.tableCell}>{formatCurrency(sale.sellingPrice - sale.costPrice)}</td>
-                    <td style={styles.tableCell}>{formatCurrency((sale.sellingPrice - sale.costPrice) * sale.quantity)}</td>
-                    <td style={styles.tableCell}>{new Date(sale.date).toLocaleDateString()}</td>
+            <div style={styles.salesListContainer}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Profit</th>
+                    <th>Total Profit</th>
+                    <th>Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {sales.map((sale) => (
+                    <tr key={sale._id} style={styles.tableRow}>
+                      <td style={styles.tableCell}>{sale.product}</td>
+                      <td style={styles.tableCell}>{sale.quantity}</td>
+                      <td style={styles.tableCell}>{formatCurrency(sale.sellingPrice - sale.costPrice)}</td>
+                      <td style={styles.tableCell}>{formatCurrency((sale.sellingPrice - sale.costPrice) * sale.quantity)}</td>
+                      <td style={styles.tableCell}>{new Date(sale.date).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -156,13 +158,17 @@ const styles = {
   },
   salesList: {
     marginBottom: '20px',
-    fontSize:'20px',
+    fontSize: '20px',
     color: 'blue',
+  },
+  // Make the sales table horizontally scrollable
+  salesListContainer: {
+    overflowX: 'auto',  // Enable horizontal scroll
+    marginTop: '10px',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginTop: '10px',
   },
   tableRow: {
     borderBottom: '1px solid #ddd',
@@ -192,6 +198,54 @@ const styles = {
     fontWeight: 'bold',
     marginTop: '10px',
     marginLeft: '10px',
+  },
+  // Media Queries for responsiveness
+  '@media (max-width: 768px)': {
+    title: {
+      fontSize: '28px',
+    },
+    dashboardTitle: {
+      fontSize: '18px',
+    },
+    salesList: {
+      fontSize: '16px', // Slightly smaller for tablet-sized screens
+    },
+    tableCell: {
+      fontSize: '14px',
+      padding: '8px',
+    },
+    table: {
+      fontSize: '14px',
+    },
+    addButton: {
+      padding: '8px 16px',
+    },
+    salesListButton: {
+      padding: '8px 16px',
+    },
+  },
+  '@media (max-width: 480px)': {
+    container: {
+      padding: '8px',
+    },
+    table: {
+      fontSize: '12px', // Smaller font for mobile
+    },
+    tableCell: {
+      padding: '6px',
+    },
+    title: {
+      fontSize: '24px',
+    },
+    dashboardTitle: {
+      fontSize: '16px',
+    },
+    addButton: {
+      padding: '6px 12px',
+    },
+    salesListButton: {
+      padding: '6px 12px',
+    },
   },
 };
 
