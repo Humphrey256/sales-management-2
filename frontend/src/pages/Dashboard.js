@@ -78,20 +78,35 @@ const Dashboard = () => {
 
       <div style={styles.content}>
         <h2 style={styles.dashboardTitle}>Dashboard</h2>
-        <h3>Total Profit: {formatCurrency(totalProfit)}</h3>
+        <h3>Cummulative Profit: {formatCurrency(totalProfit)}</h3>
         <h3>Daily Profit: {formatCurrency(dailyProfit)}</h3>
         <h3>Monthly Profit: {formatCurrency(monthlyProfit)}</h3>
 
         <div style={styles.container}>
           <div style={styles.salesList}>
             <h3>Sales List</h3>
-            <ul style={styles.list}>
-              {sales.map((sale, index) => (
-                <li key={sale._id} style={styles.listItem}>
-                  {index + 1}. {sale.product} ({sale.quantity} units) Profit: {formatCurrency((sale.sellingPrice - sale.costPrice) * sale.quantity)}
-                </li>
-              ))}
-            </ul>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Unit Profit</th>
+                  <th>Total Profit</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sales.map((sale) => (
+                  <tr key={sale._id} style={styles.tableRow}>
+                    <td style={styles.tableCell}>{sale.product}</td>
+                    <td style={styles.tableCell}>{sale.quantity}</td>
+                    <td style={styles.tableCell}>{formatCurrency(sale.sellingPrice - sale.costPrice)}</td>
+                    <td style={styles.tableCell}>{formatCurrency((sale.sellingPrice - sale.costPrice) * sale.quantity)}</td>
+                    <td style={styles.tableCell}>{new Date(sale.date).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -141,13 +156,21 @@ const styles = {
   },
   salesList: {
     marginBottom: '20px',
+    fontSize:'20px',
+    color: 'blue',
   },
-  list: {
-    listStyleType: 'none',
-    paddingLeft: 0,
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '10px',
   },
-  listItem: {
-    marginBottom: '10px',
+  tableRow: {
+    borderBottom: '1px solid #ddd',
+  },
+  tableCell: {
+    padding: '10px',
+    textAlign: 'center',
+    fontSize: '16px',
   },
   addButton: {
     display: 'inline-block',

@@ -166,7 +166,7 @@ const styles = {
   dateHeader: {
     marginBottom: '10px',
     fontSize: '20px',
-    color: 'green',
+    color: 'blue',
     fontWeight: 'bold',
   },
   tableContainer: {
