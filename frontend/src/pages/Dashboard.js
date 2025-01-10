@@ -12,7 +12,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchSales();
-    fetchTotalProfit();
     fetchDailyProfit();
     fetchMonthlyProfit();
   }, []);
@@ -21,21 +20,15 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales');
       setSales(response.data);
-      toast.success("Sales data fetched successfully!");
+      // Calculate the cumulative total profit here
+      const cumulativeProfit = response.data.reduce((acc, sale) => {
+        return acc + (sale.sellingPrice - sale.costPrice) * sale.quantity;
+      }, 0);
+      setTotalProfit(cumulativeProfit);
+      toast.success("Sales data fetched and total profit calculated!");
     } catch (error) {
       console.error('Error fetching sales:', error);
       toast.error("Error fetching sales!");
-    }
-  };
-
-  const fetchTotalProfit = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/sales/profit');
-      setTotalProfit(response.data.totalProfit);
-      toast.success("Total profit fetched successfully!");
-    } catch (error) {
-      console.error('Error fetching total profit:', error);
-      toast.error("Error fetching total profit!");
     }
   };
 
@@ -67,7 +60,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Toast Container for showing toast notifications */}
       <ToastContainer 
         position="top-right" 
         autoClose={5000} 
@@ -107,7 +99,6 @@ const Dashboard = () => {
           Add New Sales
         </Link>
 
-        {/* Link to Sales List Page */}
         <Link to="/SalesListPage" style={styles.salesListButton}>
           View Sales List
         </Link>

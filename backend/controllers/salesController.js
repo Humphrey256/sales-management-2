@@ -81,52 +81,24 @@ const deleteSale = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete sale', error: error.message });
   }
 };
-
-// Calculate total profit
-const calculateProfit = async (req, res) => {
-  try {
-    // Retrieve all sales from the database
-    const sales = await Sale.find();
-    
-    // Log sales data to ensure we are retrieving the expected data
-    console.log('Sales:', sales);
-
-    // If there are no sales, return a profit of 0
-    if (!sales || sales.length === 0) {
-      console.log('No sales found. Total profit is 0.');
-      return res.status(200).json({ totalProfit: 0 });
-    }
-
-    // Calculate the total profit from all sales
-    const totalProfit = sales.reduce(
-      (acc, sale) => acc + (sale.sellingPrice - sale.costPrice) * sale.quantity,
-      0
-    );
-    
-    // Log the total profit for debugging purposes
-    console.log('Total Profit:', totalProfit);
-
-    // Send the total profit as a response
-    res.status(200).json({ totalProfit });
-  } catch (error) {
-    // Log any error encountered
-    console.error('Error calculating profit:', error);
-    
-    // Send an error response
-    res.status(500).json({ message: 'Failed to calculate profit', error: error.message });
-  }
-};
-
-// Calculate daily profit
+// Calculate daily profit for today
 const calculateDailyProfit = async (req, res) => {
   try {
-    const today = moment().startOf('day');  // Get the start of today
+    const todayStart = moment().startOf('day');   // Get the start of today
+    const todayEnd = moment().endOf('day');       // Get the end of today
+
+    // Fetch sales for today
     const sales = await Sale.find({
-      createdAt: { $gte: today.toDate() },  // Get sales from today onwards
+      createdAt: { $gte: todayStart.toDate(), $lte: todayEnd.toDate() },
     });
 
+    if (!sales || sales.length === 0) {
+      return res.status(200).json({ dailyProfit: 0, message: 'No sales recorded for today' });
+    }
+
+    // Calculate total profit for today's sales
     const dailyProfit = sales.reduce(
-      (acc, sale) => acc + sale.profit,
+      (acc, sale) => acc + (sale.sellingPrice - sale.costPrice) * sale.quantity,
       0
     );
 
@@ -136,22 +108,44 @@ const calculateDailyProfit = async (req, res) => {
   }
 };
 
-// Calculate Monthly Profit (Last 30 Days)
+// Calculate cumulative profit
+const calculateCumulativeProfit = async (req, res) => {
+  try {
+    // Retrieve all sales from the database
+    const sales = await Sale.find();
+
+    if (!sales || sales.length === 0) {
+      return res.status(200).json({ cumulativeProfit: 0 });
+    }
+
+    // Calculate cumulative profit
+    const cumulativeProfit = sales.reduce((acc, sale) => acc + sale.profit, 0);
+
+    res.status(200).json({ cumulativeProfit });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to calculate cumulative profit', error: error.message });
+  }
+};
+
+// Calculate monthly profit (for completed months only)
 const calculateMonthlyProfit = async (req, res) => {
   try {
-    // Get the current date and calculate the date 30 days ago
-    const thirtyDaysAgo = moment().subtract(30, 'days').toDate();
+    // Get the start of the current month
+    const startOfCurrentMonth = moment().startOf('month').toDate();
+    
+    // Get the start of the previous month
+    const startOfPreviousMonth = moment().subtract(1, 'month').startOf('month').toDate();
+    
+    // Get the end of the previous month
+    const endOfPreviousMonth = moment().subtract(1, 'month').endOf('month').toDate();
 
-    // Fetch sales made in the last 30 days
+    // Fetch sales made in the previous month
     const sales = await Sale.find({
-      date: { $gte: thirtyDaysAgo }  // Filter sales made after the calculated date
+      createdAt: { $gte: startOfPreviousMonth, $lte: endOfPreviousMonth }
     });
 
-    // Calculate profit for the filtered sales
-    const monthlyProfit = sales.reduce(
-      (acc, sale) => acc + (sale.sellingPrice - sale.costPrice) * sale.quantity,
-      0
-    );
+    // Calculate profit for the previous month
+    const monthlyProfit = sales.reduce((acc, sale) => acc + sale.profit, 0);
 
     res.status(200).json({ monthlyProfit });
   } catch (error) {
@@ -159,14 +153,13 @@ const calculateMonthlyProfit = async (req, res) => {
   }
 };
 
-
 module.exports = { 
   addSale, 
   getSales, 
   getSaleById, 
   updateSale, 
   deleteSale, 
-  calculateProfit,
+  calculateCumulativeProfit,
   calculateDailyProfit,
   calculateMonthlyProfit,
 };

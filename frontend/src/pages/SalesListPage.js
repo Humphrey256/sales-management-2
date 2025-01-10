@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
-import 'react-toastify/dist/ReactToastify.css';  // Import styles
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SalesListPage = () => {
   const [sales, setSales] = useState([]);
@@ -35,17 +35,30 @@ const SalesListPage = () => {
   const deleteSale = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/sales/${id}`);
-      setSales(sales.filter((sale) => sale._id !== id)); // Update state after deleting
-      toast.success('Sale deleted successfully!');  // Show success toast
+      setSales(sales.filter((sale) => sale._id !== id));
+      toast.success('Sale deleted successfully!');
     } catch (error) {
       console.error('Error deleting sale:', error);
-      toast.error('Failed to delete sale.');  // Show error toast
+      toast.error('Failed to delete sale.');
     }
   };
 
   const editSale = (id) => {
-    navigate(`/SalesFormPage/${id}`); // Navigate to edit form with sale ID
+    navigate(`/SalesFormPage/${id}`);
   };
+
+  // Group sales by date
+  const groupedSales = sales.reduce((acc, sale) => {
+    const saleDate = new Date(sale.date).toLocaleDateString('en-UG', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    if (!acc[saleDate]) acc[saleDate] = [];
+    acc[saleDate].push(sale);
+    return acc;
+  }, {});
 
   return (
     <div style={styles.container}>
@@ -55,42 +68,47 @@ const SalesListPage = () => {
 
       <div style={styles.content}>
         <h2 style={styles.listTitle}>Sales List</h2>
-        <p style={styles.date}>{currentDate}</p>
-        {/* Scrollable container for table */}
-        <div style={styles.tableContainer}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>Product</th>
-                <th style={styles.th}>Quantity</th>
-                <th style={styles.th}>Cost Price</th>
-                <th style={styles.th}>Selling Price</th>
-                <th style={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sales.map((sale) => (
-                <tr key={sale._id} style={styles.tr}>
-                  <td style={styles.td}>{sale.product}</td>
-                  <td style={styles.td}>{sale.quantity} units</td>
-                  <td style={styles.td}>Ugx {sale.costPrice}</td>
-                  <td style={styles.td}>Ugx {sale.sellingPrice}</td>
-                  <td style={styles.td}>
-                    <button onClick={() => editSale(sale._id)} style={styles.editButton}>
-                      Edit
-                    </button>
-                    <button onClick={() => deleteSale(sale._id)} style={styles.deleteButton}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p style={styles.date}>Current Date: {currentDate}</p>
+
+        {/* Display sales grouped by date */}
+        {Object.keys(groupedSales).map((date) => (
+          <div key={date} style={styles.dateSection}>
+            <h3 style={styles.dateHeader}>{date}</h3>
+            <div style={styles.tableContainer}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Product</th>
+                    <th style={styles.th}>Quantity</th>
+                    <th style={styles.th}>Cost Price</th>
+                    <th style={styles.th}>Selling Price</th>
+                    <th style={styles.th}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedSales[date].map((sale) => (
+                    <tr key={sale._id} style={styles.tr}>
+                      <td style={styles.td}>{sale.product}</td>
+                      <td style={styles.td}>{sale.quantity} units</td>
+                      <td style={styles.td}>Ugx {sale.costPrice}</td>
+                      <td style={styles.td}>Ugx {sale.sellingPrice}</td>
+                      <td style={styles.td}>
+                        <button onClick={() => editSale(sale._id)} style={styles.editButton}>
+                          Edit
+                        </button>
+                        <button onClick={() => deleteSale(sale._id)} style={styles.deleteButton}>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ToastContainer for rendering toast notifications */}
       <ToastContainer 
         position="top-right" 
         autoClose={5000} 
@@ -142,14 +160,23 @@ const styles = {
     color: 'gray',
     fontStyle: 'italic',
   },
+  dateSection: {
+    marginBottom: '30px',
+  },
+  dateHeader: {
+    marginBottom: '10px',
+    fontSize: '20px',
+    color: 'green',
+    fontWeight: 'bold',
+  },
   tableContainer: {
-    overflowX: 'auto', // Enables horizontal scrolling on small screens
+    overflowX: 'auto',
     width: '100%',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    minWidth: '600px', // Ensures table has a minimum width for readability
+    minWidth: '600px',
   },
   th: {
     border: '1px solid #ccc',
@@ -166,7 +193,7 @@ const styles = {
     border: '1px solid #ccc',
   },
   editButton: {
-    width: '80px', // Fixed width for uniform button sizes
+    width: '80px',
     padding: '5px 10px',
     backgroundColor: 'blue',
     color: 'white',
@@ -177,7 +204,7 @@ const styles = {
     textAlign: 'center',
   },
   deleteButton: {
-    width: '80px', // Same fixed width as edit button
+    width: '80px',
     padding: '5px 10px',
     backgroundColor: 'red',
     color: 'white',
