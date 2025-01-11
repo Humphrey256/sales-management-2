@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ['https://sales-management-2.onrender.com', '*'], // Allow front-end origins
+  origin: ['https://sales-management-2.onrender.com', 'http://localhost:3000'], // Allow front-end origins
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));  // Enable CORS with the frontend URLs
@@ -19,6 +19,11 @@ app.use(express.json());
 
 // Database Connection
 dbConnect();
+
+// Basic route to verify the server is up
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
 
 // API Routes
 app.use('/api/sales', salesRoutes);
@@ -31,6 +36,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
