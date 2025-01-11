@@ -9,6 +9,9 @@ const Dashboard = () => {
   const [totalProfit, setTotalProfit] = useState(0);
   const [dailyProfit, setDailyProfit] = useState(0);
   const [monthlyProfit, setMonthlyProfit] = useState(0);
+  const [topSoldProduct, setTopSoldProduct] = useState(null);
+  const [secondSoldProduct, setSecondSoldProduct] = useState(null);
+  const [leastSoldProduct, setLeastSoldProduct] = useState(null);
 
   useEffect(() => {
     fetchSales();
@@ -20,11 +23,16 @@ const Dashboard = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/sales');
       setSales(response.data);
+      
       // Calculate the cumulative total profit here
       const cumulativeProfit = response.data.reduce((acc, sale) => {
         return acc + (sale.sellingPrice - sale.costPrice) * sale.quantity;
       }, 0);
       setTotalProfit(cumulativeProfit);
+      
+      // Calculate the most sold, second most sold, and least sold products
+      calculateTopProducts(response.data);
+      
       toast.success("Sales data fetched and total profit calculated!");
     } catch (error) {
       console.error('Error fetching sales:', error);
@@ -52,6 +60,28 @@ const Dashboard = () => {
       console.error('Error fetching monthly profit:', error);
       toast.error("Error fetching monthly profit!");
     }
+  };
+
+  const calculateTopProducts = (salesData) => {
+    const productSales = {};
+
+    salesData.forEach((sale) => {
+      if (!productSales[sale.product]) {
+        productSales[sale.product] = { totalQuantity: 0, totalProfit: 0 };
+      }
+      productSales[sale.product].totalQuantity += sale.quantity;
+      productSales[sale.product].totalProfit += (sale.sellingPrice - sale.costPrice) * sale.quantity;
+    });
+
+    // Sort products by quantity sold (descending)
+    const sortedProducts = Object.entries(productSales)
+      .map(([product, data]) => ({ product, ...data }))
+      .sort((a, b) => b.totalQuantity - a.totalQuantity);
+
+    // Get the top 3 products: most sold, second most sold, least sold
+    setTopSoldProduct(sortedProducts[0]);
+    setSecondSoldProduct(sortedProducts[1]);
+    setLeastSoldProduct(sortedProducts[sortedProducts.length - 1]);
   };
 
   const formatCurrency = (amount) => {
@@ -110,6 +140,32 @@ const Dashboard = () => {
               </table>
             </div>
           </div>
+          
+          {/* Top Sold, Second Sold, and Least Sold Products Section */}
+          {topSoldProduct && (
+            <div style={styles.productInfo}>
+              <h4>Most Sold Product: {topSoldProduct.product}</h4>
+              <p>Quantity Sold: {topSoldProduct.totalQuantity}</p>
+              <p>Total Profit: {formatCurrency(topSoldProduct.totalProfit)}</p>
+            </div>
+          )}
+
+          {secondSoldProduct && (
+            <div style={styles.productInfo}>
+              <h4>Second Most Sold Product: {secondSoldProduct.product}</h4>
+              <p>Quantity Sold: {secondSoldProduct.totalQuantity}</p>
+              <p>Total Profit: {formatCurrency(secondSoldProduct.totalProfit)}</p>
+            </div>
+          )}
+
+          {leastSoldProduct && (
+            <div style={styles.productInfo}>
+              <h4>Least Sold Product: {leastSoldProduct.product}</h4>
+              <p>Quantity Sold: {leastSoldProduct.totalQuantity}</p>
+              <p>Total Profit: {formatCurrency(leastSoldProduct.totalProfit)}</p>
+            </div>
+          )}
+
         </div>
 
         <Link to="/SalesFormPage" style={styles.addButton}>
@@ -200,53 +256,13 @@ const styles = {
     marginTop: '10px',
     marginLeft: '10px',
   },
-  // Media Queries for responsiveness
-  '@media (max-width: 768px)': {
-    title: {
-      fontSize: '28px',
-    },
-    dashboardTitle: {
-      fontSize: '18px',
-    },
-    salesList: {
-      fontSize: '16px', // Slightly smaller for tablet-sized screens
-    },
-    tableCell: {
-      fontSize: '14px',
-      padding: '8px',
-    },
-    table: {
-      fontSize: '14px',
-    },
-    addButton: {
-      padding: '8px 16px',
-    },
-    salesListButton: {
-      padding: '8px 16px',
-    },
-  },
-  '@media (max-width: 480px)': {
-    container: {
-      padding: '8px',
-    },
-    table: {
-      fontSize: '10px', // Smaller font for mobile
-    },
-    tableCell: {
-      padding: '6px',
-    },
-    title: {
-      fontSize: '24px',
-    },
-    dashboardTitle: {
-      fontSize: '16px',
-    },
-    addButton: {
-      padding: '6px 12px',
-    },
-    salesListButton: {
-      padding: '6px 12px',
-    },
+  productInfo: {
+    marginTop: '20px',
+    padding: '10px',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(22, 16, 16, 0.1)',
+    color: 'blue',  // This makes the text blue
   },
 };
 

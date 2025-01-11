@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import pluralize from 'pluralize'; // Import pluralize library
 
 const SalesFormPage = () => {
   const [product, setProduct] = useState('');
@@ -11,6 +12,11 @@ const SalesFormPage = () => {
   const [sellingPrice, setSellingPrice] = useState(0);
   const { id } = useParams(); // Get sale ID from URL if present
   const navigate = useNavigate();
+
+  // Function to normalize product name (convert plural to singular)
+  const normalizeProductName = (name) => {
+    return pluralize.singular(name.trim().toLowerCase()); // Convert to singular
+  };
 
   useEffect(() => {
     if (id) {
@@ -35,11 +41,15 @@ const SalesFormPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Normalize the product name before saving
+    const normalizedProduct = normalizeProductName(product);
+
     try {
       if (id) {
         // Update existing sale
         await axios.put(`http://localhost:5000/api/sales/${id}`, {
-          product,
+          product: normalizedProduct,
           quantity,
           costPrice,
           sellingPrice,
@@ -48,7 +58,7 @@ const SalesFormPage = () => {
       } else {
         // Add new sale
         await axios.post('http://localhost:5000/api/sales', {
-          product,
+          product: normalizedProduct,
           quantity,
           costPrice,
           sellingPrice,
