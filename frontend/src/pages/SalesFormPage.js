@@ -54,7 +54,7 @@ const SalesFormPage = () => {
           costPrice,
           sellingPrice,
         });
-        toast.success("Sale updated successfully!");
+        console.log (toast.success("Sale updated successfully!"));
       } else {
         // Add new sale
         await axios.post('http://localhost:5000/api/sales', {
