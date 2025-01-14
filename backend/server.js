@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000'], // Allow front-end origins
+  origin: ['https://sales-management-2-1.onrender.com','http://localhost:3000'], // Allow front-end origins
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 })); // Enable CORS with the frontend URLs
