@@ -12,7 +12,7 @@ const SalesListPage = () => {
   useEffect(() => {
     const fetchSales = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/sales');
+        const response = await axios.get('https://sales-management-2.onrender.com/api/sales');
         setSales(response.data);
       } catch (error) {
         console.error('Error fetching sales:', error);
@@ -34,7 +34,7 @@ const SalesListPage = () => {
 
   const deleteSale = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/sales/${id}`);
+      await axios.delete(`https://sales-management-2.onrender.com/api/sales/${id}`);
       setSales(sales.filter((sale) => sale._id !== id));
       toast.success('Sale deleted successfully!');
     } catch (error) {

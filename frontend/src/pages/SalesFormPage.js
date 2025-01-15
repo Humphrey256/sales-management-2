@@ -23,7 +23,7 @@ const SalesFormPage = () => {
       // Fetch sale data for editing
       const fetchSale = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/sales/${id}`);
+          const response = await axios.get(`https://sales-management-2.onrender.com/api/sales/${id}`);
           const { product, quantity, costPrice, sellingPrice } = response.data;
           setProduct(product);
           setQuantity(quantity);
@@ -48,7 +48,7 @@ const SalesFormPage = () => {
     try {
       if (id) {
         // Update existing sale
-        await axios.put(`http://localhost:5000/api/sales/${id}`, {
+        await axios.put(`https://sales-management-2.onrender.com/api/sales/${id}`, {
           product: normalizedProduct,
           quantity,
           costPrice,
@@ -57,7 +57,7 @@ const SalesFormPage = () => {
         console.log (toast.success("Sale updated successfully!"));
       } else {
         // Add new sale
-        await axios.post('http://localhost:5000/api/sales', {
+        await axios.post('https://sales-management-2.onrender.com/api/sales', {
           product: normalizedProduct,
           quantity,
           costPrice,

@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   const fetchSales = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/sales');
+      const response = await axios.get('https://sales-management-2.onrender.com/api/sales');
       setSales(response.data);
       
       // Calculate the cumulative total profit here
@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   const fetchDailyProfit = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/sales/profit/daily');
+      const response = await axios.get('https://sales-management-2.onrender.com/api/sales/profit/daily');
       setDailyProfit(response.data.dailyProfit);
       toast.success("Daily profit fetched successfully!");
     } catch (error) {
@@ -53,7 +53,7 @@ const Dashboard = () => {
 
   const fetchMonthlyProfit = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/sales/profit/monthly');
+      const response = await axios.get('https://sales-management-2.onrender.com/api/sales/profit/monthly');
       setMonthlyProfit(response.data.monthlyProfit);
       toast.success("Monthly profit fetched successfully!");
     } catch (error) {
@@ -256,6 +256,7 @@ const styles = {
     marginTop: '10px',
     marginLeft: '10px',
   },
+
   productInfo: {
     marginTop: '20px',
     padding: '10px',
